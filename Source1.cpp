@@ -6,17 +6,23 @@
 
 using namespace std;
 
-class Philosopher
+class Philosopher: public thread
 {
-	int state;
+public:
+	State state;
+	int total;
 	int id;
 	string name;
 
 	Chopstick  left;
 	Chopstick right;
 
-public:
-	Philosopher(int, int);
+	Syncro* syncro;
+	float thinking;
+	float hungry;
+	float eat;
+
+	Philosopher(string n, int i, Syncro* s, int t);
 };
 
 Philosopher::Philosopher(int s, int i) {
@@ -26,7 +32,12 @@ Philosopher::Philosopher(int s, int i) {
 
 class Syncro
 {
-	static s
-		emaphore chopstick[N];
+public:
+	int index;
+
+	Syncro(int n);
+	void putDownChopstick(int ii);
+	void pickUpChopstick(int i);
+	
 	static int state[5];
 };
