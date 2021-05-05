@@ -20,7 +20,7 @@ struct chop
 struct table
 {
     std::atomic<bool>                    ready{ false };
-    std::array<chop, no_of_philosophers> forks;
+    std::array<chop, no_of_philosophers> chop;
 };
 
 struct philosopher
@@ -50,6 +50,7 @@ public:
         do
         {
             think();
+            hungry();
             eat();
         } while (dinnertable.ready);
     }
@@ -84,6 +85,15 @@ public:
 
         print(" is thinking ");
     }
+    
+    void hungry()
+    {
+        static thread_local std::uniform_int_distribution<> wait(1, 6);
+        std::this_thread::sleep_for(std::chrono::milliseconds(wait(rng) * 100));
+
+        print(" is Hungry ");
+
+    }
 };
 
 void dine()
@@ -96,16 +106,16 @@ void dine()
         std::array<philosopher, no_of_philosophers> philosophers
         {
            {
-              { "Aristotle", table, table.forks[0], table.forks[1] },
-              { "Platon",    table, table.forks[1], table.forks[2] },
-              { "Descartes", table, table.forks[2], table.forks[3] },
-              { "Kant",      table, table.forks[3], table.forks[4] },
-              { "Nietzsche", table, table.forks[4], table.forks[0] },
+              { "Philosopher1 ", table, table.forks[0], table.forks[1] },
+              { "Philosopher2",    table, table.forks[1], table.forks[2] },
+              { "Philosopher3", table, table.forks[2], table.forks[3] },
+              { "Philosopher4",      table, table.forks[3], table.forks[4] },
+              { "Philosopher5", table, table.forks[4], table.forks[0] },
            }
         };
 
         table.ready = true;
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         table.ready = false;
     }
 
